@@ -1,0 +1,116 @@
+﻿@model Student_management_system.Models.Login.Login
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Logins</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://images.pexels.com/photos/2249964/pexels-photo-2249964.jpeg?auto=compress&cs=tinysrgb&w=600');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .center-div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-box {
+            width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        .custom-navbar {
+            background-color: #343a40; 
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px; 
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group:last-child {
+                margin-bottom: 0;
+            }
+
+        .login-button {
+            display: flex;
+            justify-content: center;
+        }
+
+       
+        .form-control {
+            margin: 0 auto;
+            display: table;
+        }
+
+        .action-link {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-navbar">
+
+        <div class="container">
+            <h1>Student's Portal</h1>
+
+        </div>
+        </div>
+
+        <div class="container center-div">
+            <div class="login-box">
+                <h2 class="text-center">Login</h2>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        <div>
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Name" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", placeholder = "Password" } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group login-button">
+                        <input type="submit" value="LOGIN" class="btn btn-success" />
+                    </div>
+
+                    <div class="action-link">
+                        @Html.ActionLink("Don't have an account? Register here", "Registration")
+                    </div>
+                }
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>

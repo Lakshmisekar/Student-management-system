@@ -1,0 +1,52 @@
+﻿@model List<Student_management_system.Models.Student.Student>
+
+@{
+    ViewBag.Title = "Student Details";
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            background-image: url('data:image/jpeg;base64,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'); /* Replace 'your-image-url.jpg' with the actual URL or path to your image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+
+    </style>
+</head>
+
+<h2>Student Details</h2>
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Date of Birth</th>
+        <th>Father's Name</th>
+        <th>Native</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var student in Model)
+    {
+        <tr>
+            <td>@student.Name</td>
+            <td>@student.Email</td>
+            <td>@student.DOB.ToShortDateString()</td>
+            <td>@student.FatherName</td>
+            <td>@student.Native</td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = student.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = student.Id })
+            </td>
+        </tr>
+    }
+</table>
+

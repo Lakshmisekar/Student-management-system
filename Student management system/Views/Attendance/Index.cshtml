@@ -1,0 +1,126 @@
+﻿@model List<Student_management_system.Models.Student.Student>
+
+@{
+    ViewBag.Title = "Attendance Monitoring";
+}
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <style>
+        body {
+            background-image: url('https://images.pexels.com/photos/7794441/pexels-photo-7794441.jpeg?auto=compress&cs=tinysrgb&w=600'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+
+    </style>
+</head>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    .attendance-container {
+        margin-top: 20px;
+    }
+
+    .student-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+    }
+
+    .student-name {
+        flex: 1;
+    }
+
+    .attendance-checkbox {
+        margin-right: 10px; 
+    }
+
+    .attendance-date {
+        font-size: 14px;
+        color: #888;
+    }
+</style>
+
+<h2>Mark Attendance</h2>
+
+<div class="attendance-container">
+    @foreach (var student in Model)
+    {
+        var attendance = student.Attendances.OrderByDescending(a => a.Date).FirstOrDefault();
+        var isPresent = attendance?.IsPresent ?? false;
+
+        <div class="student-row">
+            <div class="student-name">
+                <strong>@student.Name</strong>
+            </div>
+
+            <div class="switch">
+                <label class="switch">
+                    <input type="checkbox" class="attendance-checkbox" data-student-id="@student.Id" @(isPresent ? "checked" : "") />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="attendance-date">
+                @if (attendance != null)
+                {
+                    <span>Date: @attendance.Date.ToShortDateString()</span>
+                }
+                else
+                {
+                    <span>No attendance marked</span>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('.attendance-checkbox').change(function () {
+                var checkbox = $(this);
+                var studentId = checkbox.data('student-id');
+                var isPresent = checkbox.prop('checked');
+
+                $.ajax({
+                    url: '/Attendance/MarkAttendance',
+                    type: 'POST',
+                    data: { studentId: studentId, isPresent: isPresent },
+                    success: function (result) {
+                        if (result.success) {
+                            alert(result.message);
+                        } else {
+                            alert('Error: ' + result.message);
+                            // Revert the checkbox state if an error occurs
+                            checkbox.prop('checked', !isPresent);
+                        }
+                    },
+                    error: function () {
+                        alert('Error marking attendance.');
+                        // Revert the checkbox state if an error occurs
+                        checkbox.prop('checked', !isPresent);
+                    }
+                });
+            });
+        });
+    </script>
+}
