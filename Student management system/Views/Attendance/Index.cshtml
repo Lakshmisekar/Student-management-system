@@ -110,13 +110,11 @@
                             alert(result.message);
                         } else {
                             alert('Error: ' + result.message);
-                            // Revert the checkbox state if an error occurs
                             checkbox.prop('checked', !isPresent);
                         }
                     },
                     error: function () {
                         alert('Error marking attendance.');
-                        // Revert the checkbox state if an error occurs
                         checkbox.prop('checked', !isPresent);
                     }
                 });

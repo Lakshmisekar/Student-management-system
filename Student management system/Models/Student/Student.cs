@@ -20,6 +20,7 @@ namespace Student_management_system.Models.Student
 
         [Required(ErrorMessage = "Date of Birth is required")]
         [DataType(DataType.Date)]
+
         public DateTime DOB { get; set; }
 
         [Required(ErrorMessage = "Father's Name is required")]

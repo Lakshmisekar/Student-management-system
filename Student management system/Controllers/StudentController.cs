@@ -1,33 +1,33 @@
-﻿using Student_management_system.Models.Context;
+﻿using Student_management_system.Models.IRepository;
 using Student_management_system.Models.Student;
 using Student_management_system.Models.ViewModel;
-using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System;
+using System.Linq;
 
 public class StudentController : Controller
 {
-    private readonly Studentcontext _context;
+    private readonly IStudentRepository _studentRepository;
 
-    public StudentController()
+    public StudentController(IStudentRepository studentRepository)
     {
-        _context = new Studentcontext();
+        _studentRepository = studentRepository;
     }
 
     public ActionResult Details()
     {
-        List<Student> students = _context.Students.ToList();
+        List<Student> students = _studentRepository.GetAllStudents().ToList();
         return View(students);
     }
-
-    public ActionResult Register()
+    public ActionResult Home()
     {
         return View();
     }
-    public ActionResult Home()
+
+
+    public ActionResult Register()
     {
         return View();
     }
@@ -40,7 +40,6 @@ public class StudentController : Controller
         {
             try
             {
-                
                 var studentEntity = new Student
                 {
                     Name = studentViewModel.Name,
@@ -50,24 +49,20 @@ public class StudentController : Controller
                     Native = studentViewModel.Native
                 };
 
-                _context.Students.Add(studentEntity);
-                _context.SaveChanges();
+                _studentRepository.AddStudent(studentEntity);
 
-               
-                return RedirectToAction("RegistrationSuccess");
+                return RedirectToAction("Details");
             }
             catch (Exception ex)
             {
-               
                 ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
-                return View(ex.Message);
+                return View(studentViewModel);
             }
         }
 
         return View(studentViewModel);
     }
 
-    
     public ActionResult Edit(int? id)
     {
         if (id == null)
@@ -75,7 +70,7 @@ public class StudentController : Controller
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        Student student = _context.Students.Find(id);
+        Student student = _studentRepository.GetStudentById(id.Value);
 
         if (student == null)
         {
@@ -85,21 +80,19 @@ public class StudentController : Controller
         return View(student);
     }
 
-   
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Edit(Student student)
     {
         if (ModelState.IsValid)
         {
-            _context.Entry(student).State = EntityState.Modified;
-            _context.SaveChanges();
+            _studentRepository.UpdateStudent(student);
             return RedirectToAction("Details");
         }
 
         return View(student);
     }
- 
+
     public ActionResult Delete(int? id)
     {
         if (id == null)
@@ -107,7 +100,7 @@ public class StudentController : Controller
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
         }
 
-        Student student = _context.Students.Find(id);
+        Student student = _studentRepository.GetStudentById(id.Value);
 
         if (student == null)
         {
@@ -117,24 +110,14 @@ public class StudentController : Controller
         return View(student);
     }
 
-    
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public ActionResult DeleteConfirmed(int id)
     {
-        Student student = _context.Students.Find(id);
-
-        if (student == null)
-        {
-            return HttpNotFound();
-        }
-
-        _context.Students.Remove(student);
-        _context.SaveChanges();
+        _studentRepository.DeleteStudent(id);
         return RedirectToAction("Details");
     }
 
-   
     public ActionResult RegistrationSuccess()
     {
         return View();
